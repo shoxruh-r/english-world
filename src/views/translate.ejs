@@ -1,0 +1,126 @@
+<h1 class="fs-3 text-center my-3">
+    <span id="from" class="text-uppercase">en</span>
+    <i class="bi bi-arrow-left-right" id="switch"></i>
+    <span id="to" class="text-uppercase">uz</span>
+</h1>
+
+
+<form>
+    <div class="row">
+        <div class="col-6">
+            <textarea class="form-control" rows="16" style="resize: none" id="text" minlength="2" maxlength="5000"
+                required></textarea>
+        </div>
+
+        <div class="col-6">
+            <textarea class="form-control" rows="16" style="resize: none" id="result" disabled></textarea>
+        </div>
+
+        <div class="col d-flex justify-content-between mt-3">
+            <div>
+                <button type="button" class="btn btn-light d-inline" id="listen1" disabled>
+                    <i class="bi bi-volume-up-fill"></i>
+                </button>
+                <span id="characters-count">0</span>/5000
+            </div>
+            <div class="text-center">
+                <button type="reset" class="btn btn-warning d-inline" id="reset">Reset</button>
+                <button type="button" class="btn btn-success d-inline" id="translate">Translate</button>
+            </div>
+            <div class="text-end">
+                <button type="button" class="btn btn-light d-inline" id="listen2" disabled>
+                    <i class="bi bi-volume-up-fill"></i>
+                </button>
+                <button type="button" class="btn btn-light d-inline" id="copy" disabled>
+                    <i class="bi bi-clipboard"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    let from = 'en', to = 'uz'
+    const form = document.querySelector('form')
+    const textField = document.querySelector('#text')
+    const resultField = document.querySelector('#result')
+    const fromText = document.querySelector('#from')
+    const toText = document.querySelector('#to')
+    const listenButton1 = document.querySelector('#listen1')
+    const listenButton2 = document.querySelector('#listen2')
+    const copyButton = document.querySelector('#copy')
+    const charactersCount = document.querySelector('#characters-count')
+
+
+    document.querySelector('#translate').addEventListener('click', async event => {
+        const response = await fetch('/translate', {
+            method: 'post',
+            body: JSON.stringify({
+                from, to, text: textField.value
+            })
+        })
+
+        const { data } = await response.json()
+
+        resultField.value = data
+        copyButton.removeAttribute('disabled')
+        copyButton.innerHTML = '<i class="bi bi-clipboard"></i>'
+
+        if (to === 'en')
+            listenButton2.removeAttribute('disabled')
+    })
+
+
+    document.querySelector('#switch').addEventListener('click', () => {
+        [from, to] = [to, from]
+
+        fromText.textContent = from
+        toText.textContent = to
+
+        if (from === 'en') {
+            form.setAttribute('spellcheck', 'true')
+            listenButton1.removeAttribute('disabled')
+        } else {
+            form.setAttribute('spellcheck', 'false')
+            listenButton1.setAttribute('disabled', 'disabled')
+        }
+    })
+
+
+    document.querySelector('#reset').addEventListener('click', () => {
+        listenButton1.setAttribute('disabled', 'disabled')
+        listenButton2.setAttribute('disabled', 'disabled')
+        charactersCount.textContent = 0
+    })
+
+
+    textField.addEventListener('keyup', () => {
+        const textLength = textField.value.length
+
+        if (from === 'en')
+            if (textLength) listenButton1.removeAttribute('disabled')
+            else listenButton1.setAttribute('disabled', 'disabled')
+
+        charactersCount.textContent = textLength
+    })
+
+
+    listenButton1.addEventListener('click', () => {
+        const synth = window.speechSynthesis
+        const utterThis = new SpeechSynthesisUtterance(textField.value)
+        synth.speak(utterThis)
+    })
+
+
+    listenButton2.addEventListener('click', () => {
+        const synth = window.speechSynthesis
+        const utterThis = new SpeechSynthesisUtterance(resultField.value)
+        synth.speak(utterThis)
+    })
+
+
+    copyButton.addEventListener('click', () => {
+        navigator.clipboard.writeText(resultField.value)
+        copyButton.innerHTML = '<i class="bi bi-clipboard-check-fill"></i>'
+    })
+</script>
