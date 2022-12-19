@@ -1,0 +1,60 @@
+<h1 class="fs-3 text-center my-5">
+    Bosib tinglang. Nimani eshitdingiz? (tarjimasi emas)
+</h1>
+
+<div class="text-center mt-5">
+    <button type="button" class="btn btn-lg btn-outline-light border border-2" id="listen">
+        <i class="bi bi-volume-up-fill fs-1 text-primary"></i>
+    </button>
+
+    <button type="button" class="btn btn-lg btn-outline-light border border-2" id="listen-slow">
+        <i class="bi bi-bug fs-1 text-primary"></i>
+    </button>
+
+    <form>
+        <input type="text" class="form-control form-control-lg w-25 mx-auto mt-5" placeholder="Ingliz tilida yozing"
+            id="answer">
+    </form>
+</div>
+
+<script>
+    const correct = '<%- word %>'
+    const synth = window.speechSynthesis
+    const listenButton = document.querySelector('#listen')
+    const listenSlowButton = document.querySelector('#listen-slow')
+
+
+    document.querySelector('form').addEventListener('submit', async event => {
+        event.preventDefault()
+
+        if (document.querySelector('#answer').value === correct) {
+            alert("Correct!")
+            const score = localStorage.getItem('score') ?? 0
+            localStorage.setItem('score', Number(score) + 1)
+        } else {
+            alert(`Wrong answer...\nCorrect: ${correct}`)
+        }
+
+        location.reload()
+    })
+
+
+    const listen = rate => {
+        const utterThis = new SpeechSynthesisUtterance(correct)
+        utterThis.lang = 'en-US'
+
+        if (rate) utterThis.rate = rate
+
+        synth.speak(utterThis)
+    }
+
+
+    listenButton.addEventListener('click', () => {
+        listen()
+    })
+
+    listenSlowButton.addEventListener('click', () => {
+        listen(.5)
+    })
+
+</script>

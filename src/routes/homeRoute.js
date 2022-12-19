@@ -8,6 +8,7 @@ const router = new Router()
 router.get('/', controller.homePage)
 router.get('/translate', controller.translatePage)
 router.post('/translate', controller.translate)
+router.get('/listening', controller.listeningPage)
 
 
 module.exports = router

@@ -17,6 +17,7 @@
     "koa-json": "^2.0.2",
     "koa-router": "^12.0.0",
     "mongoose": "^6.8.0",
+    "random-words": "^1.2.0",
     "translate-google": "^1.5.0"
   }
 }
