@@ -21,6 +21,6 @@ render(app, {
 // Routes
 app.use(homeRouter.routes())
 
-app.use(serve('./src/public'))
+app.use(serve(path.join(__dirname, './src/public')))
 
 app.listen(3000)
