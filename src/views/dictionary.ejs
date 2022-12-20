@@ -1,0 +1,55 @@
+<h1 class="fs-3 text-center my-5">
+    Ingliz tilidagi so'zlarning imloviy lug'ati
+</h1>
+
+<form class="my-5 text-center">
+    <input type="text" class="form-control form-control-lg w-25 mx-auto mt-5" placeholder="So'zni kiriting" name="word">
+</form>
+
+<div id="result">
+
+</div>
+
+<script>
+    const resultElement = document.querySelector('#result')
+    const audio = new Audio()
+
+    document.querySelector('form').addEventListener('submit', async event => {
+        event.preventDefault()
+
+        resultElement.innerHTML = ''
+
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${event.target.word.value}`)
+        const data = await response.json()
+
+        for (const item of data) {
+            resultElement.innerHTML += `<h2>${item.word} <span class="fs-6">${item.phonetics.text ?? ''}</span></h2>`
+
+            if (item.phonetics.length)
+                resultElement.innerHTML += item.phonetics.reduce((previous, next) => {
+                    const dialect = next.audio.match(/\w{2}(?=\.mp3)/)
+
+                    return dialect ?
+                        previous + `<button class="btn btn-light audio" onclick="play('${next.audio}')"><i class="bi bi-volume-up-fill"> ${dialect[0]}</i></button>`
+                        : previous
+                }, '<div>') + '</div>'
+
+            item.meanings.forEach(meaning => {
+                resultElement.innerHTML += `<h6><i>${meaning.partOfSpeech}</i></h6>`
+
+                if (meaning.definitions.length)
+                    resultElement.innerHTML += meaning.definitions.reduce((previous, next) => {
+                        return previous + `<li>${next.definition}</li>`
+                    }, '<ol>') + '</ol>'
+            })
+
+            resultElement.innerHTML += '<hr>'
+        }
+    })
+
+
+    const play = src => {
+        audio.src = src
+        audio.play()
+    }
+</script>

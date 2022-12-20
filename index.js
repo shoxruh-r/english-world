@@ -1,6 +1,7 @@
 const Koa = require('koa')
 const { koaBody } = require('koa-body')
 const render = require('koa-ejs')
+const serve = require('koa-static')
 const path = require('path')
 const homeRouter = require('./src/routes/homeRoute')
 
@@ -20,5 +21,6 @@ render(app, {
 // Routes
 app.use(homeRouter.routes())
 
+app.use(serve('./src/public'))
 
 app.listen(3000)

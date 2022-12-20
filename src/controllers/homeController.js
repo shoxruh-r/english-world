@@ -24,4 +24,9 @@ const listeningPage = async ctx => {
 }
 
 
-module.exports = { homePage, translatePage, translate, listeningPage }
+const dictionaryPage = async ctx => {
+    await ctx.render('dictionary', { word: randomWords() })
+}
+
+
+module.exports = { homePage, translatePage, translate, listeningPage, dictionaryPage }
