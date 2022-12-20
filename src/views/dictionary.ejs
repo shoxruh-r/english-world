@@ -41,6 +41,12 @@
                     resultElement.innerHTML += meaning.definitions.reduce((previous, next) => {
                         return previous + `<li>${next.definition}</li>`
                     }, '<ol>') + '</ol>'
+
+                if (meaning.synonyms.length)
+                    resultElement.innerHTML += `<div class="my-3"><b>Synonyms</b>: <mark>${meaning.synonyms.join(', ')}</mark></div>`
+
+                if (meaning.antonyms.length)
+                    resultElement.innerHTML += `<div class="my-3"><b>Antonyms</b>: <mark>${meaning.antonyms.join(', ')}<mark></div>`
             })
 
             resultElement.innerHTML += '<hr>'
