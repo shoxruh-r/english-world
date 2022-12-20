@@ -1,14 +1,15 @@
 <h1 class="fs-3 text-center my-5">
-    Ingliz tilidagi so'zlarning imloviy lug'ati
+    Get word definitions
 </h1>
 
 <form class="my-5 text-center">
-    <input type="text" class="form-control form-control-lg w-25 mx-auto mt-5" placeholder="So'zni kiriting" name="word">
+    <input type="text" class="form-control form-control-lg w-25 mx-auto mt-5" name="word" id="word"
+        placeholder="Enter a word">
 </form>
 
-<div id="result">
+<div id="result"></div>
 
-</div>
+<script src="https://rawgithub.com/atmb4u/AutoJS/master/auto.max.min.js"></script>
 
 <script>
     const resultElement = document.querySelector('#result')
@@ -22,24 +23,30 @@
         const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${event.target.word.value}`)
         const data = await response.json()
 
+        if (!data.length) {
+            resultElement.textContent = data.message
+            return
+        }
+
         for (const item of data) {
-            resultElement.innerHTML += `<h2>${item.word} <span class="fs-6">${item.phonetics.text ?? ''}</span></h2>`
+            resultElement.innerHTML += `<h2>${item.word} <span class="fs-6">${item.phonetic ?? ''}</span></h2>`
 
             if (item.phonetics.length)
                 resultElement.innerHTML += item.phonetics.reduce((previous, next) => {
                     const dialect = next.audio.match(/\w{2}(?=\.mp3)/)
 
                     return dialect ?
-                        previous + `<button class="btn btn-light audio" onclick="play('${next.audio}')"><i class="bi bi-volume-up-fill"> ${dialect[0]}</i></button>`
+                        previous + `<button class="btn btn-light me-1 audio" onclick="play('${next.audio}')"><i class="bi bi-volume-up-fill"> ${dialect[0]}</i></button>`
                         : previous
                 }, '<div>') + '</div>'
 
             item.meanings.forEach(meaning => {
-                resultElement.innerHTML += `<h6><i>${meaning.partOfSpeech}</i></h6>`
+                resultElement.innerHTML += `<h6><u>${meaning.partOfSpeech}</u></h6>`
 
                 if (meaning.definitions.length)
                     resultElement.innerHTML += meaning.definitions.reduce((previous, next) => {
-                        return previous + `<li>${next.definition}</li>`
+                        const example = next.example ? `<br><i>Example: ${next.example}</i>` : ''
+                        return previous + `<li>${next.definition}${example}</li>`
                     }, '<ol>') + '</ol>'
 
                 if (meaning.synonyms.length)
@@ -57,5 +64,10 @@
     const play = src => {
         audio.src = src
         audio.play()
+    }
+
+
+    window.onload = () => {
+        new AutoSuggestControl('word')
     }
 </script>
