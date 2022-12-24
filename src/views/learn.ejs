@@ -1,0 +1,45 @@
+<% sections.forEach(section => { %>
+<section>
+    <header class="row bg-success text-white py-4 px-3 border rounded-4 my-5 justify-content-center align-items-center">
+        <div class="col">
+            <h1 class="fs-4 fw-bold"><%= section.order %>-bo'lim</h1>
+            <span><%= section.description %></span>
+        </div>
+        <div class="col text-end">
+            <a href="#" class="btn btn-dark fs-6 fw-semibold">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-journal-text fs-4 me-2"></i>
+                    <span>Qo'llanma</span>
+                </div>
+            </a>
+        </div>
+    </header>
+</section>
+<% }) %>
+
+<!-- <div class="exercises text-center mt-5">
+    <button type="button"
+        class="btn btn-warning px-3 border border-5 border-dark border-top-0 border-start-0 border-end-0 rounded-circle me-1">
+        <i class="bi bi-check-lg fs-3 text-dark"></i>
+    </button>
+
+    <button type="button"
+        class="btn btn-warning px-3 border border-5 border-dark border-top-0 border-start-0 border-end-0 rounded-circle me-1">
+        <i class="bi bi-check-lg fs-3 text-dark"></i>
+    </button>
+
+    <button type="button"
+        class="btn btn-success px-3 border border-5 border-dark border-top-0 border-start-0 border-end-0 rounded-circle me-1">
+        <i class="bi bi-star-fill fs-3 text-light"></i>
+    </button>
+
+    <button type="button"
+        class="btn btn-secondary px-3 border border-5 border-dark border-top-0 border-start-0 border-end-0 rounded-circle me-1">
+        <i class="bi bi-lock-fill fs-3 text-light"></i>
+    </button>
+
+    <button type="button"
+        class="btn btn-secondary px-3 border border-5 border-dark border-top-0 border-start-0 border-end-0 rounded-circle me-1">
+        <i class="bi bi-trophy-fill fs-3 text-light"></i>
+    </button>
+</div> -->

@@ -8,7 +8,7 @@ const router = new Router()
 router.get('/', controller.homePage)
 router.get('/translate', controller.translatePage)
 router.post('/translate', controller.translate)
-router.get('/listening', controller.listeningPage)
+router.get('/learn', controller.learnPage)
 router.get('/dictionary', controller.dictionaryPage)
 
 

@@ -1,0 +1,65 @@
+<header class="row">
+    <div class="col">
+        <h2>Bo'limlar</h2>
+    </div>
+
+    <div class="col text-end">
+        <button type="button" class="btn btn-dark text-end" data-bs-toggle="modal"
+            data-bs-target="#add-section">Qo'shish</button>
+    </div>
+</header>
+
+<table class="table table-dark table-striped">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tavsif</th>
+            <th>Amallar</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% sections.forEach(section => { %>
+        <tr>
+            <th><%= section.order %></th>
+            <td><%= section.description %></td>
+            <td>
+                <a href="/admin/guide/<%= section.order %>" class="btn btn-light">Qo'llanma</a>
+            </td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+
+<!-- Add Section -->
+<div class="modal fade" id="add-section" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <form action="/admin/section" method="post" class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modal-label">Bo'lim qo'shish</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="add-section" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input type="text" name="description" id="description" class="form-control" minlength="2"
+                        maxlength="64" placeholder="Tavsif" required>
+                    <label for="description" class="form-label">Tavsif</label>
+                </div>
+                <br>
+
+                <div class="form-floating">
+                    <input type="number" name="order" id="order" class="form-control" min="1" placeholder="Order">
+                    <label for="order" class="form-label">Tartib raqami</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
+                <button type="submit" class="btn btn-primary">Saqlash</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.querySelector('#order').value = document.querySelectorAll('tbody tr').length + 1
+</script>

@@ -1,9 +1,10 @@
 const googleTranslate = require('translate-google')
 const randomWords = require('random-words')
+const Section = require('../models/Section')
 
 
 const homePage = async ctx => {
-    await ctx.render('index')
+    await ctx.redirect('/learn')
 }
 
 
@@ -19,14 +20,15 @@ const translate = async ctx => {
 }
 
 
-const listeningPage = async ctx => {
-    await ctx.render('listening', { word: randomWords() })
-}
-
-
 const dictionaryPage = async ctx => {
-    await ctx.render('dictionary', { word: randomWords() })
+    await ctx.render('dictionary')
 }
 
 
-module.exports = { homePage, translatePage, translate, listeningPage, dictionaryPage }
+const learnPage = async ctx => {
+    const sections = await Section.find()
+    await ctx.render('learn', { sections })
+}
+
+
+module.exports = { homePage, translatePage, translate, learnPage, dictionaryPage }

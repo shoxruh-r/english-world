@@ -1,0 +1,92 @@
+<form method="patch">
+    <div class="form-floating">
+        <input type="text" name="title" id="title" class="form-control" minlength="2" placeholder="Sarlavha" required>
+        <label for="title" class="form-label">Sarlavha</label>
+    </div>
+    <br>
+
+    <div class="phrases">
+        <label for="phrases" class="form-label">Iboralar:</label>
+        <!-- <textarea name="phrases" id="phrases" class="form-control" minlength="2" placeholder="Iboralar" rows="3"
+            required></textarea> -->
+        <div id="phrases">
+            <div class="row mb-2">
+                <div class="col-5">
+                    <input type="text" class="form-control" placeholder="English">
+                </div>
+                <div class="col-5">
+                    <input type="text" class="form-control" placeholder="O'zbekcha">
+                </div>
+            </div>
+
+        </div>
+        <button type="button" class="btn btn-dark float-end me-5" id="add-field">+</button>
+    </div>
+    <br>
+
+    <div>
+        <label for="theory" class="form-label">Nazariya:</label>
+        <textarea id="theory" minlength="2"></textarea>
+    </div>
+    <br>
+
+    <button type="submit" class="btn btn-dark">Saqlash</button>
+</form>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.3.1/tinymce.min.js"
+    integrity="sha512-eV68QXP3t5Jbsf18jfqT8xclEJSGvSK5uClUuqayUbF5IRK8e2/VSXIFHzEoBnNcvLBkHngnnd3CY7AFpUhF7w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    tinymce.init({
+        selector: 'textarea#theory'
+    })
+
+    document.addEventListener('focusin', (e) => {
+        if (e.target.closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root") !== null) {
+            e.stopImmediatePropagation()
+        }
+    })
+
+    document.querySelector('#add-field').addEventListener('click', (event) => {
+        const element = document.querySelector('#phrases .row')
+        const elementClone = element.cloneNode(true)
+
+        elementClone.querySelectorAll('input')[0].value = ''
+        elementClone.querySelectorAll('input')[1].value = ''
+
+        document.querySelector('#phrases').appendChild(elementClone)
+    })
+
+    document.querySelector('form').addEventListener('submit', async event => {
+        event.preventDefault()
+
+        let phrases = []
+
+        document.querySelectorAll('#phrases').forEach(element => {
+            const phrase = element.querySelectorAll('input')
+            phrases.push({ en: phrase[0].value, uz: phrase[1].value })
+        })
+
+        const phraseResponse = await fetch('/admin/phrase/many', {
+            method: 'POST',
+            body: JSON.stringify(phrases),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        const guideResponse = await fetch(location.pathname, {
+            method: 'PATCH',
+            body: JSON.stringify({
+                title: document.querySelector('#title').value,
+                phrases,
+                theory: document.querySelector('#theory').value
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    })
+</script>
