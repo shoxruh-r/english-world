@@ -81,7 +81,7 @@
             method: 'PATCH',
             body: JSON.stringify({
                 title: document.querySelector('#title').value,
-                phrases,
+                phrases: await phraseResponse.json(),
                 theory: document.querySelector('#theory').value
             }),
             headers: {

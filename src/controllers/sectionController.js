@@ -11,6 +11,12 @@ const createSection = async ctx => {
 }
 
 
+const updateSection = async ctx => {
+    await Section.findOneAndUpdate({ order: 1 }, { description: 'Asosiy iboralarni biling, qayerdan ekanligingizni ayting' })
+}
+updateSection()
+
+
 const allSections = async ctx => {
     VIEW_OPTIONS.sections = await Section.find()
     await ctx.render('admin/section', VIEW_OPTIONS)
@@ -34,10 +40,13 @@ const readGuide = async ctx => {
 
 const editGuide = async ctx => {
     try {
-        console.log(typeof ctx.request.body)
+        console.log(ctx.request.body)
         const { order } = ctx.params
-        await Section.update({ order }, null, ctx.request.body)
-        ctx.response.status = 200
+        Section.findOneAndUpdate({ order }, { $push: { guide: ctx.request.body } }, (error, data) => {
+            console.log(error)
+            console.log(data)
+        })
+        // ctx.response.status = 200
     } catch (error) {
         ctx.body = error
     }
